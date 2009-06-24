@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import org.world.hello.apps.Logger;
-import org.world.hello.apps.Play;
+import org.world.hello.apps.DynamicRuntime;
 
 /**
  * Used to speed up compilation time
@@ -21,7 +21,7 @@ public class BytecodeCache {
      */
     public static void deleteBytecode(String name) {
         try {
-            if (Play.tmpDir == null || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (DynamicRuntime.tmpDir == null || !DynamicRuntime.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
                 return;
             }
             File f = cacheFile(name.replace("/", "_"));
@@ -41,7 +41,7 @@ public class BytecodeCache {
      */
     public static byte[] getBytecode(String name, String source) {
         try {
-            if (Play.tmpDir == null || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (DynamicRuntime.tmpDir == null || !DynamicRuntime.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
                 return null;
             }
             File f = cacheFile(name.replace("/", "_"));
@@ -78,7 +78,7 @@ public class BytecodeCache {
      */
     public static void cacheBytecode(byte[] byteCode, String name, String source) {
         try {
-            if (Play.tmpDir == null || !Play.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
+            if (DynamicRuntime.tmpDir == null || !DynamicRuntime.configuration.getProperty("play.bytecodeCache", "true").equals("true")) {
                 return;
             }
             File f = cacheFile(name.replace("/", "_"));
@@ -97,7 +97,7 @@ public class BytecodeCache {
         try {
             MessageDigest messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.reset();
-            messageDigest.update((BytecodeCache.version + "-" + Play.version + text).getBytes("utf-8"));
+            messageDigest.update((BytecodeCache.version + "-" + DynamicRuntime.version + text).getBytes("utf-8"));
             byte[] digest = messageDigest.digest();
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < digest.length; ++i) {
@@ -114,7 +114,7 @@ public class BytecodeCache {
     }
 
     static File cacheFile(String id) {
-        File dir = new File(Play.tmpDir, "bytecode/" + Play.mode.name());
+        File dir = new File(DynamicRuntime.tmpDir, "bytecode/" + DynamicRuntime.mode.name());
         if (!dir.exists()) {
             dir.mkdirs();
         }

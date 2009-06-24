@@ -3,7 +3,7 @@ package org.world.hello.apps.exceptions;
 /**
  * An unexpected exception
  */
-public class UnexpectedException extends PlayException {
+public class UnexpectedException extends DynamicRuntimeException {
     
     public UnexpectedException(String message) {
         super(message);

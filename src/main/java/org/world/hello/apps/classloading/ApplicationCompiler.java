@@ -22,7 +22,7 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.internal.compiler.Compiler;
 import org.world.hello.apps.Logger;
-import org.world.hello.apps.Play;
+import org.world.hello.apps.DynamicRuntime;
 import org.world.hello.apps.classloading.ApplicationClasses.ApplicationClass;
 import org.world.hello.apps.exceptions.JavaCompilationException;
 import org.world.hello.apps.exceptions.UnexpectedException;
@@ -143,7 +143,7 @@ public class ApplicationCompiler {
                 try {
 
                     if (name.startsWith("play.") || name.startsWith("java.") || name.startsWith("javax.")) {
-                        byte[] bytes = Play.classloader.getClassDefinition(name);
+                        byte[] bytes = DynamicRuntime.classloader.getClassDefinition(name);
                         if (bytes != null) {
                             ClassFileReader classFileReader = new ClassFileReader(bytes, name.toCharArray(), true);
                             return new NameEnvironmentAnswer(classFileReader, null);
@@ -169,7 +169,7 @@ public class ApplicationCompiler {
                     }
 
                     // So it's a standard class
-                    byte[] bytes = Play.classloader.getClassDefinition(name);
+                    byte[] bytes = DynamicRuntime.classloader.getClassDefinition(name);
                     if (bytes != null) {
                         ClassFileReader classFileReader = new ClassFileReader(bytes, fileName, true);
                         return new NameEnvironmentAnswer(classFileReader, null);
@@ -198,7 +198,7 @@ public class ApplicationCompiler {
                     return packagesCache.get(name).booleanValue();
                 }
                 // Check if thera a .java or .class for this ressource
-                if (Play.classloader.getClassDefinition(name) != null) {
+                if (DynamicRuntime.classloader.getClassDefinition(name) != null) {
                     packagesCache.put(name, false);
                     return false;
                 }
@@ -227,7 +227,7 @@ public class ApplicationCompiler {
                         IProblem problem = problems[i];
                         String className = new String(problem.getOriginatingFileName()).replace("/", ".");
                         className = className.substring(0, className.length() - 5);
-                        throw new JavaCompilationException(Play.classes.getApplicationClass(className), problem);
+                        throw new JavaCompilationException(DynamicRuntime.classes.getApplicationClass(className), problem);
                     }
                 }
                 // Something has been compiled

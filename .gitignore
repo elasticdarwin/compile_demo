@@ -1,2 +1,5 @@
 *.class
 *~
+
+src/main/resources/tmp/*
+target/*

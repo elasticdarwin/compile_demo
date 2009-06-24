@@ -12,7 +12,7 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.world.hello.apps.Play;
+import org.world.hello.apps.DynamicRuntime;
 import org.world.hello.apps.exceptions.UnexpectedException;
 
 /**
@@ -43,7 +43,7 @@ public class FileSystemFile extends VirtualFile {
     public String relativePath() {
         List<String> path = new ArrayList<String>();
         File f = realFile;
-        while (f != null && !f.equals(Play.applicationPath) && !f.equals(Play.frameworkPath)) {
+        while (f != null && !f.equals(DynamicRuntime.applicationPath)) {
             path.add(f.getName());
             f = f.getParentFile();
         }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.world.hello.apps.Logger;
-import org.world.hello.apps.Play;
+import org.world.hello.apps.DynamicRuntime;
 import org.world.hello.apps.exceptions.UnexpectedException;
 import org.world.hello.apps.vfs.VirtualFile;
 
@@ -45,7 +45,7 @@ public class ApplicationClasses {
         List<ApplicationClass> results = new ArrayList<ApplicationClass>();
         for (ApplicationClass applicationClass : classes.values()) {
             try {
-                Play.classloader.loadClass(applicationClass.name);
+                DynamicRuntime.classloader.loadClass(applicationClass.name);
             } catch (ClassNotFoundException ex) {
                 throw new UnexpectedException(ex);
             }
@@ -65,7 +65,7 @@ public class ApplicationClasses {
         List<ApplicationClass> results = new ArrayList<ApplicationClass>();
         for (ApplicationClass applicationClass : classes.values()) {
             try {
-                Play.classloader.loadClass(applicationClass.name);
+                DynamicRuntime.classloader.loadClass(applicationClass.name);
             } catch (ClassNotFoundException ex) {
                 throw new UnexpectedException(ex);
             }
@@ -214,7 +214,7 @@ public class ApplicationClasses {
             fileName = fileName.substring(0, fileName.indexOf("$"));
         }
         fileName = fileName.replace(".", "/") + ".java";
-        for (VirtualFile path : Play.javaPath) {
+        for (VirtualFile path : DynamicRuntime.javaPath) {
             VirtualFile javaFile = path.child(fileName);
             if (javaFile.exists()) {
                 return javaFile;

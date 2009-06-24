@@ -1,28 +1,28 @@
 package org.world.hello.apps.exceptions;
 
 import java.util.concurrent.atomic.AtomicLong;
-import org.world.hello.apps.Play;
+import org.world.hello.apps.DynamicRuntime;
 
 
 /**
  * The super class for all Play! exceptions
  */
-public abstract class PlayException extends RuntimeException {
+public abstract class DynamicRuntimeException extends RuntimeException {
 
     static AtomicLong atomicLong = new AtomicLong(System.currentTimeMillis());
     String id;
 
-    public PlayException() {
+    public DynamicRuntimeException() {
         super();
         setId();
     }
 
-    public PlayException(String message) {
+    public DynamicRuntimeException(String message) {
         super(message);
         setId();
     }
 
-    public PlayException(String message, Throwable cause) {
+    public DynamicRuntimeException(String message, Throwable cause) {
         super(message, cause);
         setId();
     }
@@ -54,7 +54,7 @@ public abstract class PlayException extends RuntimeException {
 
     public static StackTraceElement getInterestingStrackTraceElement(Throwable cause) {
         for (StackTraceElement stackTraceElement : cause.getStackTrace()) {
-            if (stackTraceElement.getLineNumber() > 0 && Play.classes.hasClass(stackTraceElement.getClassName())) {
+            if (stackTraceElement.getLineNumber() > 0 && DynamicRuntime.classes.hasClass(stackTraceElement.getClassName())) {
                 return stackTraceElement;
             }
         }

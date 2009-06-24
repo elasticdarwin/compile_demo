@@ -15,7 +15,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Priority;
 import org.apache.log4j.PropertyConfigurator;
-import org.world.hello.apps.exceptions.PlayException;
+import org.world.hello.apps.exceptions.DynamicRuntimeException;
 
 /**
  * Main logger of the application.
@@ -40,13 +40,13 @@ public class Logger {
         } else {
             PropertyConfigurator.configure(log4jConf);
             Logger.log4j = org.apache.log4j.Logger.getLogger("play");
-            if (Play.id.equals("test")) {
+            if (DynamicRuntime.id.equals("test")) {
                 org.apache.log4j.Logger rootLogger = org.apache.log4j.Logger.getRootLogger();
                 try {
-                    if (!Play.getFile("test-result").exists()) {
-                        Play.getFile("test-result").mkdir();
+                    if (!DynamicRuntime.getFile("test-result").exists()) {
+                        DynamicRuntime.getFile("test-result").mkdir();
                     }
-                    Appender testLog = new FileAppender(new PatternLayout("%d{DATE} %-5p ~ %m%n"), Play.getFile("test-result/application.log").getAbsolutePath(), false);
+                    Appender testLog = new FileAppender(new PatternLayout("%d{DATE} %-5p ~ %m%n"), DynamicRuntime.getFile("test-result/application.log").getAbsolutePath(), false);
                     rootLogger.addAppender(testLog);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -354,7 +354,7 @@ public class Logger {
     // If e is a PlayException -> a very clean report
 
     static boolean niceThrowable(Priority priority, Throwable e, String message, Object... args) {
-        if (e instanceof PlayException) {
+        if (e instanceof DynamicRuntimeException) {
 
             Throwable toClean = e;
             for (int i = 0; i < 5; i++) {
@@ -374,7 +374,7 @@ public class Logger {
                 }
             }
 
-            PlayException playException = (PlayException) e;
+            DynamicRuntimeException playException = (DynamicRuntimeException) e;
             StringWriter sw = new StringWriter();
             PrintWriter errorOut = new PrintWriter(sw);
 

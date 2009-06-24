@@ -1,15 +1,9 @@
 package org.world.hello.apps;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -17,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.world.hello.apps.classloading.ApplicationClasses;
 import org.world.hello.apps.classloading.ApplicationClassloader;
-import org.world.hello.apps.exceptions.PlayException;
+import org.world.hello.apps.exceptions.DynamicRuntimeException;
 import org.world.hello.apps.exceptions.UnexpectedException;
 import org.world.hello.apps.libs.IO;
 import org.world.hello.apps.vfs.VirtualFile;
@@ -25,7 +19,7 @@ import org.world.hello.apps.vfs.VirtualFile;
 /**
  * Main framework class
  */
-public class Play {
+public class DynamicRuntime {
 
     /**
      * 2 modes
@@ -57,7 +51,7 @@ public class Play {
     /**
      * The framework root
      */
-    public static File frameworkPath = null;
+//    public static File frameworkPath = null;
     /**
      * All loaded application classes
      */
@@ -122,28 +116,15 @@ public class Play {
      */
     public static void init(File root, String id) {
         // Simple things
-        Play.id = id;
-        Play.started = false;
-        Play.applicationPath = root;
+        DynamicRuntime.id = id;
+        DynamicRuntime.started = false;
+        DynamicRuntime.applicationPath = root;
+        DynamicRuntime.version = "v0.9";
 
-        initStaticStuff();
+//        initStaticStuff();
 
-        // Guess the framework path
-        try {
-            URL versionUrl = Play.class.getResource("/play/version");
-            URI uri = versionUrl.toURI();
-            if (uri.getScheme().equals("jar")) {
-                String jarPath = uri.getSchemeSpecificPart().substring(5, uri.getSchemeSpecificPart().lastIndexOf("!"));
-                frameworkPath = new File(jarPath).getParentFile().getParentFile().getAbsoluteFile();
-            } else if (uri.getScheme().equals("file")) {
-                frameworkPath = new File(uri).getParentFile().getParentFile().getParentFile().getParentFile();
-            }
-            version = IO.readContentAsString(versionUrl.openStream());
-        } catch (Exception e) {
-            throw new UnexpectedException("Where is the framework ?", e);
-        }
-        System.setProperty("play.path", Play.frameworkPath.getAbsolutePath());
-        System.setProperty("application.path", Play.applicationPath.getAbsolutePath());
+//        frameworkPath = new File(".").getAbsoluteFile();
+
         Logger.info("");
         Logger.info("Starting %s", root.getAbsolutePath());
 
@@ -286,7 +267,7 @@ public class Play {
             }
 
             // Try to load all classes
-            Play.classloader.getAllClasses();
+            DynamicRuntime.classloader.getAllClasses();
 
 
 
@@ -295,7 +276,7 @@ public class Play {
             startedAt = System.currentTimeMillis();
 
 
-        } catch (PlayException e) {
+        } catch (DynamicRuntimeException e) {
             started = false;
             throw e;
         } catch (Exception e) {
@@ -344,42 +325,14 @@ public class Play {
                 start();
                 return;
             }
-            if (!Play.started) {
+            if (!DynamicRuntime.started) {
                 throw new RuntimeException("Not started");
             }
-        } catch (PlayException e) {
+        } catch (DynamicRuntimeException e) {
             throw e;
         } catch (Exception e) {
             // We have to do a clean refresh
             start();
-        }
-    }
-
-    /**
-     * Allow some code to run very eraly in Play! - Use with caution !
-     */
-    public static void initStaticStuff() {
-        // Play! plugings
-        Enumeration<URL> urls = null;
-        try {
-            urls = Play.class.getClassLoader().getResources("play.static");
-        } catch (Exception e) {
-        }
-        while (urls != null && urls.hasMoreElements()) {
-            URL url = urls.nextElement();
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    try {
-                        Class.forName(line);
-                    } catch (Exception e) {
-                        System.out.println("! Cannot init static : " + line);
-                    }
-                }
-            } catch (Exception ex) {
-                Logger.error(ex, "Cannot load %s", url);
-            }
         }
     }
 
@@ -400,4 +353,31 @@ public class Play {
     public static File getFile(String path) {
         return new File(applicationPath, path);
     }
+    /**
+     * Allow some code to run very eraly in Play! - Use with caution !
+     */
+//    public static void initStaticStuff() {
+//        // Play! plugings
+//        Enumeration<URL> urls = null;
+//        try {
+//            urls = Play.class.getClassLoader().getResources("play.static");
+//        } catch (Exception e) {
+//        }
+//        while (urls != null && urls.hasMoreElements()) {
+//            URL url = urls.nextElement();
+//            try {
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "utf-8"));
+//                String line = null;
+//                while ((line = reader.readLine()) != null) {
+//                    try {
+//                        Class.forName(line);
+//                    } catch (Exception e) {
+//                        System.out.println("! Cannot init static : " + line);
+//                    }
+//                }
+//            } catch (Exception ex) {
+//                Logger.error(ex, "Cannot load %s", url);
+//            }
+//        }
+//    }
 }

@@ -7,7 +7,7 @@ import org.world.hello.apps.classloading.ApplicationClasses.ApplicationClass;
 /**
  * A Java exception
  */
-public abstract class JavaException extends PlayException implements SourceAttachment {
+public abstract class JavaException extends DynamicRuntimeException implements SourceAttachment {
 
     private ApplicationClass applicationClass;
     private Integer lineNumber;
