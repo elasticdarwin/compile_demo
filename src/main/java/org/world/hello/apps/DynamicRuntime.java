@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.world.hello.apps.classloading.ApplicationClasses;
 import org.world.hello.apps.classloading.ApplicationClassloader;
+import org.world.hello.apps.classloading.enhancers.PropertiesEnhancer;
 import org.world.hello.apps.exceptions.DynamicRuntimeException;
 import org.world.hello.apps.exceptions.UnexpectedException;
 import org.world.hello.apps.libs.IO;
@@ -108,6 +109,9 @@ public class DynamicRuntime {
      * Framework version
      */
     public static String version = null;
+    public static Class[] enhancers = new Class[]{
+        PropertiesEnhancer.class
+    };
 
     /**
      * Init the framework

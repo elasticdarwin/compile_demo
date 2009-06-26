@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import org.world.hello.apps.Logger;
 import org.world.hello.apps.DynamicRuntime;
+import org.world.hello.apps.classloading.enhancers.Enhancer;
 import org.world.hello.apps.exceptions.UnexpectedException;
 import org.world.hello.apps.vfs.VirtualFile;
 
@@ -158,9 +159,17 @@ public class ApplicationClasses {
          */
         public byte[] enhance() {
 
+            for (Class enhancer : DynamicRuntime.enhancers) {
+                try {
+                    long start = System.currentTimeMillis();
+                    ((Enhancer) enhancer.newInstance()).enhanceThisClass(this);
+                    Logger.trace("%sms to apply %s to %s", System.currentTimeMillis() - start, enhancer.getSimpleName(), name);
+                } catch (Exception e) {
+                    throw new UnexpectedException("While applying " + enhancer + " on " + name, e);
+                }
+            }
 
             return this.enhancedByteCode;
-
         }
 
         /**
