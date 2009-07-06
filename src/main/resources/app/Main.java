@@ -1,10 +1,10 @@
 public class Main {
 
-    public String greeting = "hello boy";
+    public String greeting = "boy";
 
     public String getGreeting() {
     
-        return "++" + greeting + "++";
+        return "-" + greeting + "-";
     }
 
     public static void start() {

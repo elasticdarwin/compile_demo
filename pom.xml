@@ -75,7 +75,7 @@
 
                         <executions>
                             <execution>
-                                <phase>verify</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>exec</goal>
                                 </goals>
